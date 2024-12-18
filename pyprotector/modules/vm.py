@@ -141,13 +141,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send(f"Blacklisted MAC: `{UserInfo.MAC}`", self.name)
                 self.event.dispatch(
-                    "blacklisted_mac_address",
-                    "Blacklisted MAC Detected",
-                    self.name,
-                    mac_addr=UserInfo.MAC,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["blacklisted_mac_address", "pyprotector_detect"],
                     "Blacklisted MAC Detected",
                     self.name,
                     mac_addr=UserInfo.MAC,
@@ -160,13 +154,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send(f"Blacklisted GPU: `{UserInfo.GPU}`", self.name)
                 self.event.dispatch(
-                    "blacklisted_gpu",
-                    "Blacklisted GPU Detected",
-                    self.name,
-                    gpu=UserInfo.GPU,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["blacklisted_gpu", "pyprotector_detect"],
                     "Blacklisted GPU Detected",
                     self.name,
                     gpu=UserInfo.GPU,
@@ -199,14 +187,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send("VMWare Registry Detected", self.name)
                 self.event.dispatch(
-                    "vmware_registry",
-                    "VMWare Registry Detected",
-                    self.name,
-                    reg1=reg1,
-                    reg2=reg2,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["vmware_registry", "pyprotector_detect"],
                     "VMWare Registry Detected",
                     self.name,
                     reg1=reg1,
@@ -224,13 +205,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send("VMWare MAC Address Detected", self.name)
                 self.event.dispatch(
-                    "vmware_mac",
-                    "VMWare MAC Address Detected",
-                    self.name,
-                    mac_addr=UserInfo.MAC,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["vmware_mac", "pyprotector_detect"],
                     "VMWare MAC Address Detected",
                     self.name,
                     mac_addr=UserInfo.MAC,
@@ -250,10 +225,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send(f"Screen Size Is: **x**: {x} | **y**: {y}", self.name)
                 self.event.dispatch(
-                    "screen_size", f"Screen Size X: {x} | Y: {y}", self.name, x=x, y=y
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["screen_size", "pyprotector_detect"],
                     f"Screen Size X: {x} | Y: {y}",
                     self.name,
                     x=x,
@@ -287,13 +259,7 @@ class AntiVM(Module):
                     "Blacklisted Virtual Machine Process Running", self.name
                 )
                 self.event.dispatch(
-                    "vm_process_running",
-                    "Blacklisted Virtual Machine Process Running",
-                    self.name,
-                    processes=processList,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["vm_process_running", "pyprotector_detect"],
                     "Blacklisted Virtual Machine Process Running",
                     self.name,
                     processes=processList,
@@ -306,10 +272,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send("VMWare DLL Detected", self.name)
                 self.event.dispatch(
-                    "vmware_dll", "VMWare DLL Detected", self.name, dll=vmware_dll
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["vmware_dll", "pyprotector_detect"],
                     "VMWare DLL Detected",
                     self.name,
                     dll=vmware_dll,
@@ -322,13 +285,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send("VirtualBox DLL Detected", self.name)
                 self.event.dispatch(
-                    "virtualbox_dll",
-                    "VirtualBox DLL Detected",
-                    self.name,
-                    dll=virtualbox_dll,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["virtualbox_dll", "pyprotector_detect"],
                     "VirtualBox DLL Detected",
                     self.name,
                     dll=virtualbox_dll,

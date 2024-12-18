@@ -48,7 +48,7 @@ auth = Keyauth(
 
 
 @security.event.obs.on("process_running")
-def on_process_running(text: str, module: str, process):
+def on_process_running(text: str, module: str, process) -> None:
     print(f"{module} - {text}\nProcess Name: {process.name()}")
     print(security.user)
     auth.ban()

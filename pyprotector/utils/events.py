@@ -26,7 +26,7 @@ class ProtectorObservable:
           module (str): The name of the module that triggered the event.
 
         Returns:
-          ProtectorEvent
+          None
         """
         for event in events:
           self.obs.trigger(event, text, module, **kwargs)

@@ -76,14 +76,7 @@ class AntiDLL(Module):
                             self.name,
                         )
                         self.event.dispatch(
-                            "dll_attach",
-                            f"The following DLLs were discovered loaded in processes running on the system. DLLS: {EvidenceOfSandbox}",
-                            self.name,
-                            {EvidenceOfSandbox},
-                            dlls=EvidenceOfSandbox,
-                        )
-                        self.event.dispatch(
-                            "pyprotector_detect",
+                            ["dll_attach", "pyprotector_detect"],
                             f"The following DLLs were discovered loaded in processes running on the system. DLLS: {EvidenceOfSandbox}",
                             self.name,
                             {EvidenceOfSandbox},

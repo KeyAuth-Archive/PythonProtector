@@ -156,10 +156,7 @@ class AntiAnalysis(Module):
             if self.report:
                 self.webhook.send("Debug Object Handle Detected", self.name)
                 self.event.dispatch(
-                    "se_debug_name", "Debug Object Handle Detected", self.name
-                )
-                self.event.dispatch(
-                    "pyprotector_detect", "Debug Object Handle Detected", self.name
+                    ["se_debug_name", "pyprotector_detect"], "Debug Object Handle Detected", self.name
                 )
             if self.exit:
                 os._exit((1))
@@ -191,12 +188,7 @@ class AntiAnalysis(Module):
                     self.name,
                 )
                 self.event.dispatch(
-                    "nt_global_flag_debugged",
-                    "NT_GLOBAL_FLAG_DEBUGGED Found in the Process Environment Block",
-                    self.name,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["nt_global_flag_debugged", "pyprotector_detect"],
                     "NT_GLOBAL_FLAG_DEBUGGED Found in the Process Environment Block",
                     self.name,
                 )
@@ -226,12 +218,7 @@ class AntiAnalysis(Module):
             if self.report:
                 self.webhook.send("Hardware Breakpoints Found Set", self.name)
                 self.event.dispatch(
-                    "hardware_breakpoint_set",
-                    "Hardware Breakpoints Found Set",
-                    self.name,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["hardware_breakpoint_set", "pyprotector_detect"],
                     "Hardware Breakpoints Found Set",
                     self.name,
                 )
@@ -254,10 +241,9 @@ class AntiAnalysis(Module):
                     "Debug Filter State `!= 0`, debugging detected", self.name
                 )
                 self.event.dispatch(
-                    "debug_filter_state", "Debug Filter State is not 0", self.name
-                )
-                self.event.dispatch(
-                    "pyprotector_detect", "Debug Filter State is not 0", self.name
+                    ["debug_filter_state", "pyprotector_detect"],
+                    "Debug Filter State is not 0",
+                    self.name,
                 )
             if self.exit:
                 os._exit(1)
@@ -280,10 +266,9 @@ class AntiAnalysis(Module):
             if self.report:
                 self.webhook.send("Process Found Being Debugged", self.name)
                 self.event.dispatch(
-                    "peb_being_debugged", "Process Found Being Debugged", self.name
-                )
-                self.event.dispatch(
-                    "pyprotector_detect", "Process Found Being Debugged", self.name
+                    ["peb_being_debugged", "pyprotector_detect"],
+                    "Process Found Being Debugged",
+                    self.name,
                 )
             if self.exit:
                 os._exit(1)

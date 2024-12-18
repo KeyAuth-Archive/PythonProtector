@@ -76,13 +76,7 @@ class Miscellaneous(Module):
                     self.name,
                 )
                 self.event.dispatch(
-                    "ram_check",
-                    "Less than 4 GB of RAM exists on this system",
-                    self.name,
-                    ram=memory,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["ram_check", "pyprotector_detect"],
                     "Less than 4 GB of RAM exists on this system",
                     self.name,
                     ram=memory,
@@ -99,10 +93,9 @@ class Miscellaneous(Module):
             if self.report:
                 self.webhook.send("IsDebuggerPresent Returned True", self.name)
                 self.event.dispatch(
-                    "is_debugger_present", "IsDebuggerPresent Returned True", self.name
-                )
-                self.event.dispatch(
-                    "pyprotector_detect", "IsDebuggerPresent Returned True", self.name
+                    ["is_debugger_present", "pyprotector_detect"],
+                    "IsDebuggerPresent Returned True",
+                    self.name,
                 )
             if self.exit:
                 os._exit(1)
@@ -120,12 +113,7 @@ class Miscellaneous(Module):
                     self.name,
                 )
                 self.event.dispatch(
-                    "check_remote_debugger_present",
-                    "CheckRemoteDebuggerPresent Returned True",
-                    self.name,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["check_remote_debugger_present", "pyprotector_detect"],
                     "CheckRemoteDebuggerPresent Returned True",
                     self.name,
                 )
@@ -148,13 +136,7 @@ class Miscellaneous(Module):
                     f"The Current Disk Size Is {diskSizeGB}GB, Which Is Less Than The Minimum"
                 )
                 self.event.dispatch(
-                    "disk_size_check",
-                    f"The Current Disk Size Is {diskSizeGB}GB, Which Is Less Than The Minimum",
-                    self.name,
-                    disk_size=diskSizeGB,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["disk_size_check", "pyprotector_detect"],
                     f"The Current Disk Size Is {diskSizeGB}GB, Which Is Less Than The Minimum",
                     self.name,
                     disk_size=diskSizeGB,
@@ -197,13 +179,7 @@ class Miscellaneous(Module):
                 if self.report:
                     self.webhook.send("Blacklisted Path Found", self.name)
                     self.event.dispatch(
-                        "blacklisted_path",
-                        "Blacklisted Path Found",
-                        self.name,
-                        path=path,
-                    )
-                    self.event.dispatch(
-                        "pyprotector_detect",
+                        ["blacklisted_path", "pyprotector_detect"],
                         "Blacklisted Path Found",
                         self.name,
                         path=path,
@@ -226,15 +202,9 @@ class Miscellaneous(Module):
                             self.name,
                         )
                         self.event.dispatch(
-                            "blacklisted_import",
+                            ["blacklisted_import", "pyprotector_detect"],
                             f"{package} Was Found Installed",
                             self.name,
-                            package=package,
-                            dist=dist,
-                        )
-                        self.event.dispatch(
-                            "pyprotector_detect",
-                            f"{package} Was Found Installed",
                             package=package,
                             dist=dist,
                         )
@@ -254,10 +224,9 @@ class Miscellaneous(Module):
             if self.report:
                 self.webhook.send("OutputDebugString Not Equal To 0", self.name)
                 self.event.dispatch(
-                    "output_debug_string", "OutputDebugString Not Equal To 0", self.name
-                )
-                self.event.dispatch(
-                    "pyprotector_detect", "OutputDebugString Not Equal To 0", self.name
+                    ["output_debug_string", "pyprotector_detect"],
+                    "OutputDebugString Not Equal To 0",
+                    self.name,
                 )
             if self.exit:
                 os._exit(1)
@@ -272,13 +241,7 @@ class Miscellaneous(Module):
                     f"`{UserInfo.IP}` Is A Blacklisted IP Address", self.name
                 )
                 self.event.dispatch(
-                    "ip_check",
-                    f"{UserInfo.IP} Is A Blacklisted IP Address",
-                    self.name,
-                    ip=UserInfo.IP,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["ip_check", "pyprotector_detect"],
                     f"{UserInfo.IP} Is A Blacklisted IP Address",
                     self.name,
                     ip=UserInfo.IP,
@@ -298,10 +261,8 @@ class Miscellaneous(Module):
                     "CPU Core Count Is Less Than Or Equal To `1`", self.name
                 )
                 self.event.dispatch(
-                    "cpu_count" "CPU Core Count Is Less Than Or Equal To 1", self.name
-                )
-                self.event.dispatch(
-                    "pyprotector_detect" "CPU Core Count Is Less Than Or Equal To 1",
+                    ["cpu_count", "pyprotector_detect"],
+                    "CPU Core Count Is Less Than Or Equal To 1",
                     self.name,
                 )
             if self.exit:
@@ -317,13 +278,7 @@ class Miscellaneous(Module):
                 if self.report:
                     self.webhook.send("Proxy Headers Being Used", self.name)
                     self.event.dispatch(
-                        "proxy_headers",
-                        "Proxy Headers Being Used",
-                        self.name,
-                        header=header,
-                    )
-                    self.event.dispatch(
-                        "pyprotector_detect",
+                        ["proxy_headers", "pyprotector_detect"],
                         "Proxy Headers Being Used",
                         self.name,
                         header=header,
@@ -336,10 +291,7 @@ class Miscellaneous(Module):
             if self.report:
                 self.webhook.send("Proxy IP Being Used", self.name)
                 self.event.dispatch(
-                    "proxy_ip", "Proxy IP Being Used", self.name, ip=UserInfo.IP
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["proxy_ip", "pyprotector_detect"],
                     "Proxy IP Being Used",
                     self.name,
                     ip=UserInfo.IP,
@@ -357,9 +309,10 @@ class Miscellaneous(Module):
                 self.logger.info("Tor Network Detected")
                 if self.report:
                     self.webhook.send("Tor Network In Use", self.name)
-                    self.event.dispatch("tor_network", "Tor Network In Use", self.name)
                     self.event.dispatch(
-                        "pyprotector_detect", "Tor Network In Use", self.name
+                        ["tor_network", "pyprotector_detect"],
+                        "Tor Network In Use",
+                        self.name,
                     )
                 if self.exit:
                     os._exit(1)
@@ -373,10 +326,9 @@ class Miscellaneous(Module):
                 if self.report:
                     self.webhook.send("Transparent Proxies Detected", self.name)
                     self.event.dispatch(
-                        "transparent_proxies", "Transparent Proxies Detected", self.name
-                    )
-                    self.event.dispatch(
-                        "pyprotector_detect", "Transparent Proxies Detected", self.name
+                        ["transparent_proxies", "pyprotector_detect"],
+                        "Transparent Proxies Detected",
+                        self.name,
                     )
                 if self.exit:
                     os._exit(1)
