@@ -21,6 +21,7 @@ from ..types import Event, Logger
 from ..abc import Module
 from ..constants import Lists
 from ..utils.webhook import Webhook
+import contextlib
 
 
 class AntiProcess(Module):
@@ -61,13 +62,7 @@ class AntiProcess(Module):
                                     self.name,
                                 )
                                 self.event.dispatch(
-                                    "process_running",
-                                    f"{process.name()} was detected running on the system.",
-                                    self.name,
-                                    process=process,
-                                )
-                                self.event.dispatch(
-                                    "pyprotector_detect",
+                                    ["process_running", "pyprotector_detect"],
                                     f"{process.name()} was detected running on the system.",
                                     self.name,
                                     process=process,
@@ -84,38 +79,34 @@ class AntiProcess(Module):
         """Checks Window Names Against Blacklisted List"""
 
         def winEnumHandler(hwnd, ctx) -> None:
-            if win32gui.GetWindowText(hwnd).lower() in Lists.BLACKLISTED_WINDOW_NAMES:
-                pid: tuple[int, int] = GetWindowThreadProcessId(hwnd)
-                if isinstance(pid, int):
-                    try:
-                        psutil.Process(pid).terminate()
-                    except BaseException:
-                        pass
-                else:
-                    for process in pid:
-                        try:
-                            psutil.Process(process).terminate()
-                        except BaseException:
-                            pass
-                self.logger.info(f"{win32gui.GetWindowText(hwnd)} Found")
-                if self.report:
-                    self.webhook.send(
-                        f"Debugger {win32gui.GetWindowText(hwnd)}", self.name
-                    )
-                    self.event.dispatch(
-                        "window_name_detected",
-                        f"Debugger {win32gui.GetWindowText(hwnd)} Found Open",
-                        self.name,
-                        window_name=win32gui.GetWindowText(hwnd),
-                    )
-                    self.event.dispatch(
-                        "pyprotector_detect",
-                        f"Debugger {win32gui.GetWindowText(hwnd)} Found Open",
-                        self.name,
-                        window_name=win32gui.GetWindowText(hwnd),
-                    )
-                if self.exit:
-                    os._exit(1)
+            if (
+                win32gui.GetWindowText(hwnd).lower()
+                not in Lists.BLACKLISTED_WINDOW_NAMES
+            ):
+                return
+            pid: tuple[int, int] = GetWindowThreadProcessId(hwnd)
+            if isinstance(pid, int):
+                with contextlib.suppress(BaseException):
+                    psutil.Process(pid).terminate()
+
+            else:
+                for process in pid:
+                    with contextlib.suppress(BaseException):
+                        psutil.Process(process).terminate()
+
+            self.logger.info(f"{win32gui.GetWindowText(hwnd)} Found")
+            if self.report:
+                self.webhook.send(
+                    f"Debugger {win32gui.GetWindowText(hwnd)}", self.name
+                )
+                self.event.dispatch(
+                    ["window_name_detected", "pyprotector_detect"],
+                    f"Debugger {win32gui.GetWindowText(hwnd)} Found Open",
+                    self.name,
+                    window_name=win32gui.GetWindowText(hwnd),
+                )
+            if self.exit:
+                os._exit(1)
 
         while True:
             win32gui.EnumWindows(winEnumHandler, None)

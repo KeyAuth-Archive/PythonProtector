@@ -31,8 +31,7 @@ def getIPAddress() -> str:
         return "No IP Address"
 
     response = response.json()
-    ip = response.get("ip")
-    return ip
+    return response.get("ip")
 
 
 def hasInternet() -> bool:

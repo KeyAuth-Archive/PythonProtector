@@ -21,6 +21,7 @@ import requests
 import psutil
 import win32api
 
+from functools import lru_cache
 from typing import Literal
 
 from ..types import Event, Logger
@@ -48,6 +49,7 @@ class Miscellaneous(Module):
     def version(self) -> int:
         return 1.0
 
+    @lru_cache
     def CheckInternet(self) -> None:
         """
         Checks If There Is A Valid Connection To The Internet
@@ -62,6 +64,7 @@ class Miscellaneous(Module):
             else:
                 pass
 
+    @lru_cache
     def CheckRAM(self) -> None:
         """Checks RAM Size For Being Less Than 4 GB"""
         memory: int = psutil.virtual_memory().total
@@ -129,6 +132,7 @@ class Miscellaneous(Module):
             if self.exit:
                 os._exit(1)
 
+    @lru_cache
     def CheckDiskSize(self) -> None:
         """Check Disk Size"""
         minDiskSizeGB: Literal[50] = 50
@@ -184,6 +188,7 @@ class Miscellaneous(Module):
             'cmd.exe /c @RD /S /Q "C:\\Users\\%username%\\AppData\\Local\\Microsoft\\Windows\\INetCache\\IE" >nul 2>&1'
         )
 
+    @lru_cache
     def CheckPaths(self) -> None:
         """Checks Paths on Computer Against Blacklisted Paths"""
         for path in Lists.BLACKLISTED_PATHS:
@@ -257,6 +262,7 @@ class Miscellaneous(Module):
             if self.exit:
                 os._exit(1)
 
+    @lru_cache
     def CheckIPs(self) -> None:
         """Checks User IP Against Blacklisted List"""
         if UserInfo.IP in Lists.BLACKLISTED_IPS:
@@ -281,7 +287,8 @@ class Miscellaneous(Module):
                 os._exit(1)
         else:
             pass
-
+    
+    @lru_cache
     def CheckCPUCores(self) -> None:
         """Checks CPU Core Count For Being Less Than 1"""
         if int(psutil.cpu_count()) <= 1:
@@ -299,7 +306,7 @@ class Miscellaneous(Module):
                 )
             if self.exit:
                 os._exit(1)
-
+    
     def IsUsingProxy(self) -> None:
         """Checks If Proxies Are In Use"""
         headers: dict[str, str] = {"User-Agent": "Mozilla/5.0"}

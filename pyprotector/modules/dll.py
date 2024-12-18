@@ -59,13 +59,13 @@ class AntiDLL(Module):
                                     win32process.GetModuleFileNameEx(hProcess, dll)
                                 ).lower()
                                 for sandboxDLL in Lists.BLACKLISTED_DLLS:
-                                    if sandboxDLL in dllName:
-                                        if dllName not in EvidenceOfSandbox:
-                                            EvidenceOfSandbox.append(dllName)
-                        finally:
+                                    if sandboxDLL in dllName and dllName not in EvidenceOfSandbox:  # noqa: E501
+                                        EvidenceOfSandbox.append(dllName)
                             win32api.CloseHandle(hProcess)
-                    except BaseException:
-                        pass
+                        except BaseException:  
+                            pass
+                    except Exception as e:
+                        raise e
                 if EvidenceOfSandbox:
                     self.logger.info(
                         f"The Following DLL's: {EvidenceOfSandbox} Were Found Loaded"

@@ -63,7 +63,7 @@ class Webhook:
                 decrypted_message: str = LoggingInfo.CIPHER.decrypt(
                     encoded_message
                 ).decode("utf-8")
-                line: str = line.replace(str(encrypted_message), str(decrypted_message))
+                line: str = line.replace(encrypted_message, decrypted_message)
                 decrypted_logs_file.write(f"{line}\n")
             return decrypted_logs_file.getvalue()
 

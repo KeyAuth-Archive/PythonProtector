@@ -104,9 +104,9 @@ class PythonProtector:
             self.logger.configure(**LOGGING_CONFIG)
 
         # -- Initialize Constants
-        self.screenshot: bool = bool("Screenshot" in self.detections)
-        self.exit: bool = bool("Exit" in self.detections)
-        self.report: bool = bool("Report" in self.detections)
+        self.screenshot: bool = "Screenshot" in self.detections
+        self.exit: bool = "Exit" in self.detections
+        self.report: bool = "Report" in self.detections
 
         # -- Initialize Events
         self.event: ProtectorObservable = ProtectorObservable()
@@ -251,6 +251,40 @@ class PythonProtector:
                 Thread(
                     name=self.AntiDump.name, target=self.AntiDump.StartChecks
                 ).start()
+                
+    def _run_debug_module_threads(self):
+        self.logger.info("PythonProtector Starting")
+
+        self.logger.info(f"Version: {ProtectorInfo.VERSION}")
+        self.logger.info(f"Current Path: {ProtectorInfo.ROOT_PATH}")
+        self.logger.info(
+            f"Operating System: {platform.uname().system} {platform.uname().release} {platform.win32_edition()} ({platform.architecture(sys.executable)[0]})"
+        )
+        bt = datetime.datetime.fromtimestamp(psutil.boot_time())
+        self.logger.info(
+            f"Boot Time: {bt.year}/{bt.month}/{bt.day} {bt.hour}:{bt.minute}:{bt.second}"
+        )
+        self.logger.info(f"Python: {platform.python_version()}")
+        self.logger.info(f"Is Administrator: {is_admin()}")
+
+        cpu_info = cpuinfo.get_cpu_info()
+        cpu_type = cpu_info["arch"]
+        cpu_cores = cpu_info["count"]
+
+        self.logger.info(f"Processor Type: {cpu_type}")
+        self.logger.info(f"Processor Cores: {cpu_cores}")
+
+        vmem = psutil.virtual_memory()
+
+        self.logger.info(f"Total Memory: {humanize.naturalsize(vmem.total)}")
+        self.logger.info(
+            f"Memory Availability: {humanize.naturalsize(vmem.available)}"
+        )
+        self.logger.info(f"Memory Percentage: {vmem.percent}%")
+
+        self.logger.info("Starting PythonProtector Services")
+
+        self._run_module_threads(debug=True)
 
     def start(self) -> None:
         """Main Function Of PythonProtector
@@ -267,37 +301,6 @@ class PythonProtector:
 
         # -- Start Main Program
         if self.debug:
-            self.logger.info("PythonProtector Starting")
-
-            self.logger.info(f"Version: {ProtectorInfo.VERSION}")
-            self.logger.info(f"Current Path: {ProtectorInfo.ROOT_PATH}")
-            self.logger.info(
-                f"Operating System: {platform.uname().system} {platform.uname().release} {platform.win32_edition()} ({platform.architecture(sys.executable)[0]})"
-            )
-            bt = datetime.datetime.fromtimestamp(psutil.boot_time())
-            self.logger.info(
-                f"Boot Time: {bt.year}/{bt.month}/{bt.day} {bt.hour}:{bt.minute}:{bt.second}"
-            )
-            self.logger.info(f"Python: {platform.python_version()}")
-            self.logger.info(f"Is Administrator: {is_admin()}")
-
-            cpu_info = cpuinfo.get_cpu_info()
-            cpu_type = cpu_info["arch"]
-            cpu_cores = cpu_info["count"]
-
-            self.logger.info(f"Processor Type: {cpu_type}")
-            self.logger.info(f"Processor Cores: {cpu_cores}")
-
-            vmem = psutil.virtual_memory()
-
-            self.logger.info(f"Total Memory: {humanize.naturalsize(vmem.total)}")
-            self.logger.info(
-                f"Memory Availability: {humanize.naturalsize(vmem.available)}"
-            )
-            self.logger.info(f"Memory Percentage: {vmem.percent}%")
-
-            self.logger.info("Starting PythonProtector Services")
-
-            self._run_module_threads(debug=True)
+            self._run_debug_module_threads()
         else:
             self._run_module_threads(debug=False)

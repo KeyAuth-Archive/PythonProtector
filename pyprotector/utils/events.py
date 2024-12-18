@@ -10,21 +10,13 @@ Made With ❤️ By Ghoul & Marci
 """
 
 from observable import Observable
-
-
-class ProtectorEvent:
-    def __init__(self, event: str, text: str, module: str, **kwargs) -> None:
-        self.event: str = event
-        self.text: str = text
-        self.module: str = module
-        self.extra: dict = kwargs
-
+from typing import List
 
 class ProtectorObservable:
     def __init__(self) -> None:
         self.obs: Observable = Observable()
 
-    def dispatch(self, event: str, text: str, module: str, **kwargs) -> ProtectorEvent:
+    def dispatch(self, events: List[str], text: str, module: str, **kwargs) -> None:
         """
         It triggers an event.
 
@@ -36,5 +28,5 @@ class ProtectorObservable:
         Returns:
           ProtectorEvent
         """
-        self.obs.trigger(event, text, module, **kwargs)
-        return ProtectorEvent(event, text, module, **kwargs)
+        for event in events:
+          self.obs.trigger(event, text, module, **kwargs)

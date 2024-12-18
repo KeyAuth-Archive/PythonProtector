@@ -50,10 +50,8 @@ class Keyauth:
             "ownerid": self.ownerid,
         }
 
-        if data is None:
-            pass
-        else:
-            _post_data.update(data)
+        if data is not None:
+            _post_data |= data
 
         return _post_data
 
@@ -62,8 +60,8 @@ class Keyauth:
             response = httpx.post(API.BASE_URL, params=data, timeout=30)
             response.raise_for_status()
             return response.json()
-        except (httpx.TimeoutException, httpx.ConnectError, httpx.HTTPError):
-            raise RequestError("Internal Request Failed!")
+        except (httpx.TimeoutException, httpx.ConnectError, httpx.HTTPError) as e:
+            raise RequestError("Internal Request Failed!") from e
 
     def initialize(self) -> Union[bool, KeyauthAppData]:
         """Initializes your Keyauth Application
@@ -388,8 +386,7 @@ class Keyauth:
         if not response["success"]:
             raise RequestError(response["message"])
 
-        file = bytes.fromhex(response["contents"])
-        return file
+        return bytes.fromhex(response["contents"])
 
     def checkSession(self) -> bool:
         """Check Session

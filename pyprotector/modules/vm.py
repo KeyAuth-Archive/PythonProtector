@@ -15,6 +15,7 @@ import sys
 
 import httpx
 
+from functools import lru_cache
 from typing import List
 
 from ..types import Event, Logger
@@ -72,6 +73,7 @@ class AntiVM(Module):
             or sys.prefix
         )
 
+    @lru_cache
     def CheckLists(self) -> None:
         """
         Checks if the user's HWID, PC username, PC name, IP, MAC address, or GPU is in the blacklists.
@@ -83,13 +85,7 @@ class AntiVM(Module):
                     f"Blacklisted HWID Detected: `{UserInfo.HWID}`", self.name
                 )
                 self.event.dispatch(
-                    "blacklisted_hwid",
-                    "Blacklisted HWID Detected",
-                    self.name,
-                    hwid=UserInfo.HWID,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["blacklisted_hwid", "pyprotector_detect"],
                     "Blacklisted HWID Detected",
                     self.name,
                     hwid=UserInfo.HWID,
@@ -104,13 +100,7 @@ class AntiVM(Module):
                     f"Blacklisted PC User: `{UserInfo.USERNAME}`", self.name
                 )
                 self.event.dispatch(
-                    "blacklisted_pc_username",
-                    "Blacklisted PC User Detected",
-                    self.name,
-                    pc_username=UserInfo.USERNAME,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["blacklisted_pc_username", "pyprotector_detect"],
                     "Blacklisted PC User Detected",
                     self.name,
                     pc_username=UserInfo.USERNAME,
@@ -125,13 +115,7 @@ class AntiVM(Module):
                     f"Blacklisted PC Name: `{UserInfo.PC_NAME}`", self.name
                 )
                 self.event.dispatch(
-                    "blacklisted_pc_name",
-                    "Blacklisted PC Name Detected",
-                    self.name,
-                    pc_name=UserInfo.PC_NAME,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["blacklisted_pc_name", "pyprotector_detect"],
                     "Blacklisted PC Name Detected",
                     self.name,
                     pc_name=UserInfo.PC_NAME,
@@ -144,13 +128,7 @@ class AntiVM(Module):
             if self.report:
                 self.webhook.send(f"Blacklisted IP: `{UserInfo.IP}`", self.name)
                 self.event.dispatch(
-                    "blacklisted_ip",
-                    "Blacklisted IP Detected",
-                    self.name,
-                    ip=UserInfo.IP,
-                )
-                self.event.dispatch(
-                    "blacklisted_ip",
+                    ["blacklisted_ip", "pyprotector_detect"],
                     "Blacklisted IP Detected",
                     self.name,
                     ip=UserInfo.IP,
@@ -196,6 +174,7 @@ class AntiVM(Module):
             if self.exit:
                 os._exit(1)
 
+    @lru_cache
     def CheckVirtualEnv(self) -> None:
         """
         Checks sys.prefix
@@ -203,6 +182,7 @@ class AntiVM(Module):
         if self._get_base_prefix_compat() != sys.prefix and self.exit:
             os._exit(1)
 
+    @lru_cache
     def CheckRegistry(self) -> None:
         """
         Checks VMWare Registry Keys
@@ -258,6 +238,7 @@ class AntiVM(Module):
             if self.exit:
                 os._exit(1)
 
+    @lru_cache
     def CheckScreenSize(self) -> None:
         """
         Checks the screen size for being less than 200x200

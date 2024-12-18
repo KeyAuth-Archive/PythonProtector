@@ -20,7 +20,6 @@ def getchecksum() -> str:
         str: File Hash
     """
     md5_hash = hashlib.md5()
-    file = open("".join(sys.argv), "rb")
-    md5_hash.update(file.read())
-    digest: str = md5_hash.hexdigest()
-    return digest
+    with open("".join(sys.argv), "rb") as file:
+        md5_hash.update(file.read())
+    return md5_hash.hexdigest()

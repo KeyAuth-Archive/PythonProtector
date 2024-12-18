@@ -72,14 +72,10 @@ class AntiAnalysis(Module):
         for priv in debug_privilege:
             if priv.s_luid.LowPart == 21 and priv.s_attributes & 0x00000002:
                 self.ntdll.NtClose(hToken)
-                self.logger.info("Debug Privilege Found Enabled")
                 if self.report:
                     self.webhook.send("Debug Privilege Enabled", self.name)
                     self.event.dispatch(
-                        "debug_privilege_found", "Debug Privilege Enabled", self.name
-                    )
-                    self.event.dispatch(
-                        "pyprotector_detect", "Debug Privilege Enabled", self.name
+                        ["debug_privilege_found", "pyprotector_detect"], "Debug Privilege Enabled", self.name
                     )
                 if self.exit:
                     os._exit(1)
@@ -126,16 +122,10 @@ class AntiAnalysis(Module):
         )
         if HasDebugObject:
             self.kernel32.CloseHandle(hProcess)
-            self.logger.info("Debug Object Handle Found")
             if self.report:
                 self.webhook.send("Debug Object Handle Detected", self.name)
                 self.event.dispatch(
-                    "debug_object_handle_found",
-                    "Debug Object Handle Detected",
-                    self.name,
-                )
-                self.event.dispatch(
-                    "pyprotector_detect",
+                    ["debug_object_handle_found", "pyprotector_detect"],
                     "Debug Object Handle Detected",
                     self.name,
                 )
