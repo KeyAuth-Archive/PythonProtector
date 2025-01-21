@@ -8,6 +8,7 @@
 
 Made With ❤️ By Ghoul & Marci
 """
+
 from dataclasses import dataclass
 
 from datetime import datetime
@@ -27,7 +28,11 @@ class KeyauthAppData:
         self.onlineUsers: int = data["numOnlineUsers"]
 
     def __repr__(self) -> str:
-        return f"Keyauth App ({self.version}) with {self.users} users, {self.keys} keys and {self.onlineUsers} online users"
+        return f"Keyauth App ({
+            self.version}) with {
+            self.users} users, {
+            self.keys} keys and {
+                self.onlineUsers} online users"
 
 
 class KeyauthUser:
@@ -52,9 +57,8 @@ class KeyauthUser:
         self.current_subscription: Subscription = Subscription(
             **data["subscriptions"][0]
         )
-        self.subscriptions: list[Subscription] = [
-            Subscription(**subscription) for subscription in data["subscriptions"]
-        ]
+        self.subscriptions: list[Subscription] = [Subscription(
+            **subscription) for subscription in data["subscriptions"]]
 
     def __repr__(self) -> str:
         return self.username
@@ -67,9 +71,8 @@ class KeyauthChat:
     timestamp: str
 
     def __post_init__(self) -> None:
-        self.timestamp = datetime.utcfromtimestamp(int(self.timestamp)).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
+        self.timestamp = datetime.utcfromtimestamp(
+            int(self.timestamp)).strftime("%Y-%m-%d %H:%M:%S")
 
 
 @dataclass

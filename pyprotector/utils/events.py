@@ -12,11 +12,17 @@ Made With ❤️ By Ghoul & Marci
 from observable import Observable
 from typing import List
 
+
 class ProtectorObservable:
     def __init__(self) -> None:
         self.obs: Observable = Observable()
 
-    def dispatch(self, events: List[str], text: str, module: str, **kwargs) -> None:
+    def dispatch(
+            self,
+            events: List[str],
+            text: str,
+            module: str,
+            **kwargs) -> None:
         """
         It triggers an event.
 
@@ -29,4 +35,4 @@ class ProtectorObservable:
           None
         """
         for event in events:
-          self.obs.trigger(event, text, module, **kwargs)
+            self.obs.trigger(event, text, module, **kwargs)

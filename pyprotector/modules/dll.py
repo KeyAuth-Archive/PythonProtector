@@ -24,8 +24,12 @@ from ..utils.webhook import Webhook
 
 class AntiDLL(Module):
     def __init__(
-        self, webhook: Webhook, logger: Logger, exit: bool, report: bool, event: Event
-    ) -> None:
+            self,
+            webhook: Webhook,
+            logger: Logger,
+            exit: bool,
+            report: bool,
+            event: Event) -> None:
         self.webhook: Webhook = webhook
         self.logger: Logger = logger
         self.exit: bool = exit
@@ -52,24 +56,25 @@ class AntiDLL(Module):
                         hProcess: int = win32api.OpenProcess(0x0410, 0, pid)
                         try:
                             curProcessDLLs: tuple = win32process.EnumProcessModules(
-                                hProcess
-                            )
+                                hProcess)
                             for dll in curProcessDLLs:
                                 dllName: str = str(
-                                    win32process.GetModuleFileNameEx(hProcess, dll)
-                                ).lower()
+                                    win32process.GetModuleFileNameEx(
+                                        hProcess, dll)).lower()
                                 for sandboxDLL in Lists.BLACKLISTED_DLLS:
-                                    if sandboxDLL in dllName and dllName not in EvidenceOfSandbox:  # noqa: E501
+                                    if (
+                                        sandboxDLL in dllName
+                                        and dllName not in EvidenceOfSandbox
+                                    ):  # noqa: E501
                                         EvidenceOfSandbox.append(dllName)
                             win32api.CloseHandle(hProcess)
-                        except BaseException:  
+                        except BaseException:
                             pass
                     except Exception as e:
                         raise e
                 if EvidenceOfSandbox:
                     self.logger.info(
-                        f"The Following DLL's: {EvidenceOfSandbox} Were Found Loaded"
-                    )
+                        f"The Following DLL's: {EvidenceOfSandbox} Were Found Loaded")
                     if self.report:
                         self.webhook.send(
                             f"The following DLLs were discovered loaded in processes running on the system. DLLS: {EvidenceOfSandbox}",

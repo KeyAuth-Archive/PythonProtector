@@ -21,8 +21,12 @@ from ..utils.webhook import Webhook
 
 class AntiAnalysis(Module):
     def __init__(
-        self, webhook: Webhook, logger: Logger, exit: bool, report: bool, event: Event
-    ) -> None:
+            self,
+            webhook: Webhook,
+            logger: Logger,
+            exit: bool,
+            report: bool,
+            event: Event) -> None:
         self.webhook: Webhook = webhook
         self.logger: Logger = logger
         self.exit: bool = exit
@@ -66,16 +70,18 @@ class AntiAnalysis(Module):
             self.ntdll.NtClose(hToken)
             return
 
-        debug_privilege = (ctypes.c_int * (return_length.value // 8)).from_buffer(
-            privileges
-        )
+        debug_privilege = (ctypes.c_int *
+                           (return_length.value //
+                            8)).from_buffer(privileges)
         for priv in debug_privilege:
             if priv.s_luid.LowPart == 21 and priv.s_attributes & 0x00000002:
                 self.ntdll.NtClose(hToken)
                 if self.report:
                     self.webhook.send("Debug Privilege Enabled", self.name)
                     self.event.dispatch(
-                        ["debug_privilege_found", "pyprotector_detect"], "Debug Privilege Enabled", self.name
+                        ["debug_privilege_found", "pyprotector_detect"],
+                        "Debug Privilege Enabled",
+                        self.name,
                     )
                 if self.exit:
                     os._exit(1)
@@ -96,8 +102,9 @@ class AntiAnalysis(Module):
             return
 
         self.ntdll.NtSetInformationThread(
-            hThread, 0x11, ctypes.byref((ctypes.c_int(1)), ctypes.sizeof(ctypes.c_int))
-        )
+            hThread, 0x11, ctypes.byref(
+                (ctypes.c_int(1)), ctypes.sizeof(
+                    ctypes.c_int)))
 
         self.kernel32.CloseHandle(hThread)
         self.kernel32.CloseHandle(hProcess)
@@ -156,7 +163,9 @@ class AntiAnalysis(Module):
             if self.report:
                 self.webhook.send("Debug Object Handle Detected", self.name)
                 self.event.dispatch(
-                    ["se_debug_name", "pyprotector_detect"], "Debug Object Handle Detected", self.name
+                    ["se_debug_name", "pyprotector_detect"],
+                    "Debug Object Handle Detected",
+                    self.name,
                 )
             if self.exit:
                 os._exit((1))
@@ -184,9 +193,7 @@ class AntiAnalysis(Module):
             )
             if self.report:
                 self.webhook.send(
-                    "NT_GLOBAL_FLAG_DEBUGGED Found in the Process Environment Block",
-                    self.name,
-                )
+                    "NT_GLOBAL_FLAG_DEBUGGED Found in the Process Environment Block", self.name, )
                 self.event.dispatch(
                     ["nt_global_flag_debugged", "pyprotector_detect"],
                     "NT_GLOBAL_FLAG_DEBUGGED Found in the Process Environment Block",
@@ -203,7 +210,8 @@ class AntiAnalysis(Module):
         if hThread is None:
             return
 
-        if not self.kernel32.GetThreadContext(hThread, ctypes.byref(ThreadContext)):
+        if not self.kernel32.GetThreadContext(
+                hThread, ctypes.byref(ThreadContext)):
             self.kernel32.CloseHandle(hThread)
             return
 

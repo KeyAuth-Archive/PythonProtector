@@ -26,15 +26,20 @@ from ..utils.webhook import Webhook
 
 class AntiVM(Module):
     def __init__(
-        self, webhook: Webhook, logger: Logger, exit: bool, report: bool, event: Event
-    ) -> None:
+            self,
+            webhook: Webhook,
+            logger: Logger,
+            exit: bool,
+            report: bool,
+            event: Event) -> None:
         self.webhook: Webhook = webhook
         self.logger: Logger = logger
         self.exit: bool = exit
         self.report: bool = report
         self.event: Event = event
 
-        self.VMWARE_MACS: List[str] = ["00:05:69", "00:0c:29", "00:1c:14", "00:50:56"]
+        self.VMWARE_MACS: List[str] = [
+            "00:05:69", "00:0c:29", "00:1c:14", "00:50:56"]
 
         self.HWIDS: List[str] = httpx.get(
             "https://raw.githubusercontent.com/xFGhoul/PythonProtector/dev/data/hwid_list.txt"
@@ -79,7 +84,9 @@ class AntiVM(Module):
         Checks if the user's HWID, PC username, PC name, IP, MAC address, or GPU is in the blacklists.
         """
         if UserInfo.HWID in self.HWIDS:
-            self.logger.info(f"Blacklisted HWID Detected. HWID: {UserInfo.HWID}")
+            self.logger.info(
+                f"Blacklisted HWID Detected. HWID: {
+                    UserInfo.HWID}")
             if self.report:
                 self.webhook.send(
                     f"Blacklisted HWID Detected: `{UserInfo.HWID}`", self.name
@@ -126,7 +133,9 @@ class AntiVM(Module):
         if UserInfo.IP in self.IPS:
             self.logger.info(f"Blacklisted IP: {UserInfo.IP}")
             if self.report:
-                self.webhook.send(f"Blacklisted IP: `{UserInfo.IP}`", self.name)
+                self.webhook.send(
+                    f"Blacklisted IP: `{
+                        UserInfo.IP}`", self.name)
                 self.event.dispatch(
                     ["blacklisted_ip", "pyprotector_detect"],
                     "Blacklisted IP Detected",
@@ -139,7 +148,9 @@ class AntiVM(Module):
         if UserInfo.MAC in self.MACS:
             self.logger.info(f"Blacklisted MAC: {UserInfo.MAC}")
             if self.report:
-                self.webhook.send(f"Blacklisted MAC: `{UserInfo.MAC}`", self.name)
+                self.webhook.send(
+                    f"Blacklisted MAC: `{
+                        UserInfo.MAC}`", self.name)
                 self.event.dispatch(
                     ["blacklisted_mac_address", "pyprotector_detect"],
                     "Blacklisted MAC Detected",
@@ -152,7 +163,9 @@ class AntiVM(Module):
         if UserInfo.GPU in self.GPUS:
             self.logger.info(f"Blacklisted GPU: {UserInfo.GPU}")
             if self.report:
-                self.webhook.send(f"Blacklisted GPU: `{UserInfo.GPU}`", self.name)
+                self.webhook.send(
+                    f"Blacklisted GPU: `{
+                        UserInfo.GPU}`", self.name)
                 self.event.dispatch(
                     ["blacklisted_gpu", "pyprotector_detect"],
                     "Blacklisted GPU Detected",
@@ -223,7 +236,8 @@ class AntiVM(Module):
         if x <= 200 or y <= 200:
             self.logger.info(f"Screen Size X: {x} | Y: {y}")
             if self.report:
-                self.webhook.send(f"Screen Size Is: **x**: {x} | **y**: {y}", self.name)
+                self.webhook.send(
+                    f"Screen Size Is: **x**: {x} | **y**: {y}", self.name)
                 self.event.dispatch(
                     ["screen_size", "pyprotector_detect"],
                     f"Screen Size X: {x} | Y: {y}",
@@ -241,7 +255,8 @@ class AntiVM(Module):
         vmware_dll: str = os.path.join(
             os.environ["SystemRoot"], "System32\\vmGuestLib.dll"
         )
-        virtualbox_dll: str = os.path.join(os.environ["SystemRoot"], "vboxmrxnp.dll")
+        virtualbox_dll: str = os.path.join(
+            os.environ["SystemRoot"], "vboxmrxnp.dll")
 
         process: str = os.popen(
             'TASKLIST /FI "STATUS eq RUNNING" | find /V "Image Name" | find /V "="'
@@ -250,7 +265,12 @@ class AntiVM(Module):
 
         for processNames in process.split(" "):
             if ".exe" in processNames:
-                processList.append(processNames.replace("K\n", "").replace("\n", ""))
+                processList.append(
+                    processNames.replace(
+                        "K\n",
+                        "").replace(
+                        "\n",
+                        ""))
 
         if any(Lists.VIRTUAL_MACHINE_PROCESSES) in processList:
             self.logger.info("Blacklisted Virtual Machine Process Running")

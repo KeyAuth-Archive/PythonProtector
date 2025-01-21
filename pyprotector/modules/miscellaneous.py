@@ -33,8 +33,12 @@ from ..utils.webhook import Webhook
 
 class Miscellaneous(Module):
     def __init__(
-        self, webhook: Webhook, logger: Logger, exit: bool, report: bool, event: Event
-    ) -> None:
+            self,
+            webhook: Webhook,
+            logger: Logger,
+            exit: bool,
+            report: bool,
+            event: Event) -> None:
         self.webhook: Webhook = webhook
         self.logger: Logger = logger
         self.exit: bool = exit
@@ -133,8 +137,7 @@ class Miscellaneous(Module):
             self.logger.info("Disk Check Failed")
             if self.report:
                 self.webhook.send(
-                    f"The Current Disk Size Is {diskSizeGB}GB, Which Is Less Than The Minimum"
-                )
+                    f"The Current Disk Size Is {diskSizeGB}GB, Which Is Less Than The Minimum")
                 self.event.dispatch(
                     ["disk_size_check", "pyprotector_detect"],
                     f"The Current Disk Size Is {diskSizeGB}GB, Which Is Less Than The Minimum",
@@ -150,7 +153,8 @@ class Miscellaneous(Module):
         os.system("taskkill /f /im HTTPDebuggerSvc.exe >nul 2>&1")
         os.system('taskkill /FI "IMAGENAME eq cheatengine*" /IM * /F /T >nul 2>&1')
         os.system('taskkill /FI "IMAGENAME eq httpdebugger*" /IM * /F /T >nul 2>&1')
-        os.system('taskkill /FI "IMAGENAME eq processhacker*" /IM * /F /T >nul 2>&1')
+        os.system(
+            'taskkill /FI "IMAGENAME eq processhacker*" /IM * /F /T >nul 2>&1')
         os.system('taskkill /FI "IMAGENAME eq fiddler*" /IM * /F /T >nul 2>&1')
         os.system('taskkill /FI "IMAGENAME eq wireshark*" /IM * /F /T >nul 2>&1')
         os.system('taskkill /FI "IMAGENAME eq rawshark*" /IM * /F /T >nul 2>&1')
@@ -158,7 +162,8 @@ class Miscellaneous(Module):
         os.system('taskkill /FI "IMAGENAME eq cheatengine*" /IM * /F /T >nul 2>&1')
         os.system('taskkill /FI "IMAGENAME eq ida*" /IM * /F /T >nul 2>&1')
         os.system('taskkill /FI "IMAGENAME eq httpdebugger*" /IM * /F /T >nul 2>&1')
-        os.system('taskkill /FI "IMAGENAME eq processhacker*" /IM * /F /T >nul 2>&1')
+        os.system(
+            'taskkill /FI "IMAGENAME eq processhacker*" /IM * /F /T >nul 2>&1')
         os.system("sc stop HTTPDebuggerPro >nul 2>&1")
         os.system("sc stop KProcessHacker3 >nul 2>&1")
         os.system("sc stop KProcessHacker2 >nul 2>&1")
@@ -222,7 +227,8 @@ class Miscellaneous(Module):
         if win32api.GetLastError() != 0:
             self.logger.info("OutputDebugString Is Not 0")
             if self.report:
-                self.webhook.send("OutputDebugString Not Equal To 0", self.name)
+                self.webhook.send(
+                    "OutputDebugString Not Equal To 0", self.name)
                 self.event.dispatch(
                     ["output_debug_string", "pyprotector_detect"],
                     "OutputDebugString Not Equal To 0",
@@ -250,7 +256,7 @@ class Miscellaneous(Module):
                 os._exit(1)
         else:
             pass
-    
+
     @lru_cache
     def CheckCPUCores(self) -> None:
         """Checks CPU Core Count For Being Less Than 1"""
@@ -267,7 +273,7 @@ class Miscellaneous(Module):
                 )
             if self.exit:
                 os._exit(1)
-    
+
     def IsUsingProxy(self) -> None:
         """Checks If Proxies Are In Use"""
         headers: dict[str, str] = {"User-Agent": "Mozilla/5.0"}
@@ -303,7 +309,8 @@ class Miscellaneous(Module):
             _socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             _socket.settimeout(5)
             _socket.connect(("check.torproject.org", 9050))
-            _socket.send(b"GET / HTTP/1.1\r\nHost: check.torproject.org\r\n\r\n")
+            _socket.send(
+                b"GET / HTTP/1.1\r\nHost: check.torproject.org\r\n\r\n")
             data: bytes = _socket.recv(1024)
             if "Congratulations" in data.decode():
                 self.logger.info("Tor Network Detected")
@@ -324,7 +331,8 @@ class Miscellaneous(Module):
             if IP >> 24 in [0, 10, 100, 127, 169, 172, 192]:
                 self.logger.info("Transparent Proxies Detected")
                 if self.report:
-                    self.webhook.send("Transparent Proxies Detected", self.name)
+                    self.webhook.send(
+                        "Transparent Proxies Detected", self.name)
                     self.event.dispatch(
                         ["transparent_proxies", "pyprotector_detect"],
                         "Transparent Proxies Detected",

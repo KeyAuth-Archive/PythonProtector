@@ -28,13 +28,8 @@ class UserInfo:
     USERNAME: Final[str] = os.getlogin()
     PC_NAME: Final[str] = os.getenv("COMPUTERNAME")
     IP: Final[str] = getIPAddress()
-    HWID: Final[str] = (
-        subprocess.check_output("wmic csproduct get uuid")
-        .decode()
-        .split("\n")[1]
-        .strip()
-    )
     COMPUTER: Any = wmi.WMI()
+    HWID: Final[str] = COMPUTER.Win32_ComputerSystemProduct()[0].UUID
     MAC: Final[str] = ":".join(re.findall("..", "%012x" % uuid.getnode()))
     GPU: Final[str] = COMPUTER.Win32_VideoController()[0].Name
 
@@ -45,14 +40,15 @@ class LoggingInfo:
     CIPHER: Fernet = Fernet(KEY)
 
     def encrypted_formatter(record) -> str:
-        encrypted: bytes = LoggingInfo.CIPHER.encrypt(record["message"].encode("utf8"))
+        encrypted: bytes = LoggingInfo.CIPHER.encrypt(
+            record["message"].encode("utf8"))
         record["extra"]["encrypted"] = b64encode(encrypted).decode("latin1")
         return "[{time:YYYY-MM-DD HH:mm:ss}] {module}::{function}({line}) - {extra[encrypted]}\n{exception}"
 
 
 @final
 class ProtectorInfo:
-    VERSION: Final[str] = "1.8"
+    VERSION: Final[str] = "2.0"
     ROOT_PATH: str = os.path.abspath(os.curdir)
 
 
@@ -61,9 +57,9 @@ class EmbedConfig:
     COLOR: Final[str] = "5865F2"
     TITLE: Final[str] = f"PythonProtector - {ProtectorInfo.VERSION}"
     VERSION: Final[str] = ProtectorInfo.VERSION
-    ICON: Final[
-        str
-    ] = "https://thereisabotforthat-storage.s3.amazonaws.com/1548526271231_security%20bot%20logo.png"
+    ICON: Final[str] = (
+        "https://thereisabotforthat-storage.s3.amazonaws.com/1548526271231_security%20bot%20logo.png"
+    )
 
 
 @final

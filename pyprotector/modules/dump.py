@@ -8,6 +8,7 @@
 
 Made With ❤️ By Ghoul & Marci
 """
+
 import ctypes
 import win32api
 
@@ -22,8 +23,12 @@ from ..utils.webhook import Webhook
 
 class AntiDump(Module):
     def __init__(
-        self, webhook: Webhook, logger: Logger, exit: bool, report: bool, event: Event
-    ) -> None:
+            self,
+            webhook: Webhook,
+            logger: Logger,
+            exit: bool,
+            report: bool,
+            event: Event) -> None:
         self.webhook: Webhook = webhook
         self.logger: Logger = logger
         self.exit: bool = exit
@@ -52,7 +57,10 @@ class AntiDump(Module):
         self.kernel32.VirtualProtect(
             ctypes.pointer(baseAddress), 4096, 0x04, ctypes.pointer(oldProtect)
         )
-        ctypes.memset(ctypes.pointer(baseAddress), 4096, ctypes.sizeof(baseAddress))
+        ctypes.memset(
+            ctypes.pointer(baseAddress),
+            4096,
+            ctypes.sizeof(baseAddress))
         self.event.dispatch(
             "pe_header_erased", "PE Header Erased From Memory", self.name
         )

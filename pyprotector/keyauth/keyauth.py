@@ -24,7 +24,12 @@ from .exceptions import NewVersionAvailable, ApplicationNotFound, RequestError
 
 class Keyauth:
     def __init__(
-        self, name: str, ownerid: str, secret: str, version: str, file_hash: Optional[str] = ""
+        self,
+        name: str,
+        ownerid: str,
+        secret: str,
+        version: str,
+        file_hash: Optional[str] = "",
     ) -> None:
         self.name: str = name
         self.ownerid: str = ownerid
@@ -78,7 +83,8 @@ class Keyauth:
         if self.__session_id is not None:
             raise RuntimeError("This session has already been initialized!")
 
-        self._enc_key: str = SHA256.new(str(uuid.uuid4())[:8].encode()).hexdigest()
+        self._enc_key: str = SHA256.new(
+            str(uuid.uuid4())[:8].encode()).hexdigest()
 
         response: Response = self.__request(
             self._post_data(
@@ -105,8 +111,11 @@ class Keyauth:
         return (self.initialized, KeyauthAppData(response["appinfo"]))
 
     def register(
-        self, username: str, password: str, license: str, hwid: Optional[str] = None
-    ) -> KeyauthUser:
+            self,
+            username: str,
+            password: str,
+            license: str,
+            hwid: Optional[str] = None) -> KeyauthUser:
         """Creates user with license key
         Args:
             username (str): user's input for username
@@ -154,8 +163,11 @@ class Keyauth:
             KeyauthUser: Upgraded User
         """
         response: Response = self.__request(
-            self._post_data(type="upgrade", data={"username": username, "key": key})
-        )
+            self._post_data(
+                type="upgrade",
+                data={
+                    "username": username,
+                    "key": key}))
 
         if not response["success"]:
             raise RequestError(response["message"])
@@ -184,9 +196,11 @@ class Keyauth:
         response: Response = self.__request(
             self._post_data(
                 type="login",
-                data={"username": username, "password": password, "hwid": hwid},
-            )
-        )
+                data={
+                    "username": username,
+                    "password": password,
+                    "hwid": hwid},
+            ))
 
         if not response["success"]:
             raise RequestError(response["message"])
@@ -227,7 +241,8 @@ class Keyauth:
         Returns:
             Dict: Dictionary of Online Users
         """
-        response: Response = self.__request(self._post_data(type="fetchOnline"))
+        response: Response = self.__request(
+            self._post_data(type="fetchOnline"))
 
         if not response["success"]:
             raise RequestError(response["message"])
@@ -248,8 +263,11 @@ class Keyauth:
             None
         """
         response: Response = self.__request(
-            self._post_data(type="setvar", data={"var": variable, "data": data})
-        )
+            self._post_data(
+                type="setvar",
+                data={
+                    "var": variable,
+                    "data": data}))
 
         if not response["success"]:
             raise RequestError(response["message"])
@@ -417,8 +435,9 @@ class Keyauth:
             bool: If the username has changed or not
         """
         response: Response = self.__request(
-            self._post_data(type="changeUsername", data={"newUsername": username})
-        )
+            self._post_data(
+                type="changeUsername", data={
+                    "newUsername": username}))
 
         if not response["success"]:
             raise RequestError(response["message"])
@@ -433,8 +452,11 @@ class Keyauth:
             message (str): Message
         """
         self.__request(
-            self._post_data(type="log", data={"user": user, "message": message})
-        )
+            self._post_data(
+                type="log",
+                data={
+                    "user": user,
+                    "message": message}))
 
     def webhook(self, webhook_id: str, params: str) -> None:
         """Send Webhook

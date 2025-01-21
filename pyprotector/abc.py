@@ -9,7 +9,6 @@
 Made With ❤️ By Ghoul & Marci
 """
 
-
 from abc import ABCMeta, abstractmethod
 
 

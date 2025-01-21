@@ -26,8 +26,12 @@ import contextlib
 
 class AntiProcess(Module):
     def __init__(
-        self, webhook: Webhook, logger: Logger, exit: bool, report: bool, event: Event
-    ) -> None:
+            self,
+            webhook: Webhook,
+            logger: Logger,
+            exit: bool,
+            report: bool,
+            event: Event) -> None:
         self.webhook: Webhook = webhook
         self.logger: Logger = logger
         self.exit: bool = exit
@@ -56,7 +60,8 @@ class AntiProcess(Module):
                     ):
                         try:
                             if self.report:
-                                self.logger.info(f"{process.name} Process Was Running")
+                                self.logger.info(
+                                    f"{process.name} Process Was Running")
                                 self.webhook.send(
                                     f"`{process.name()}` was detected running on the system.",
                                     self.name,
@@ -97,8 +102,9 @@ class AntiProcess(Module):
             self.logger.info(f"{win32gui.GetWindowText(hwnd)} Found")
             if self.report:
                 self.webhook.send(
-                    f"Debugger {win32gui.GetWindowText(hwnd)}", self.name
-                )
+                    f"Debugger {
+                        win32gui.GetWindowText(hwnd)}",
+                    self.name)
                 self.event.dispatch(
                     ["window_name_detected", "pyprotector_detect"],
                     f"Debugger {win32gui.GetWindowText(hwnd)} Found Open",

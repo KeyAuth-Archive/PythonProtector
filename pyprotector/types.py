@@ -8,6 +8,7 @@
 
 Made With ❤️ By Ghoul & Marci
 """
+
 from typing import Type
 
 from pyprotector.utils.events import ProtectorObservable
